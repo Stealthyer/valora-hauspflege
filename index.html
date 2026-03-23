@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valora Hauspflege — Luxus-Reinigung, Schweiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #7B6A63;
+            --text: #D8CFC7;
+            --secondary: #E7DED6;
+            --accent: #5E514C;
+            --gold: #C2A878;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--accent);
+            color: var(--text);
+            font-family: 'Jost', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* CURSOR */
+        .cursor {
+            position: fixed; width: 8px; height: 8px;
+            background: var(--gold); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease;
+        }
+        .cursor-ring {
+            position: fixed; width: 32px; height: 32px;
+            border: 1px solid var(--gold); border-radius: 50%;
+            pointer-events: none; z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+            opacity: 0.6;
+        }
+        .cursor.expand { transform: translate(-50%, -50%) scale(2.5); }
+        .cursor-ring.expand { width: 48px; height: 48px; }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 1.8rem 4rem;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.4s ease;
+        }
+        nav.scrolled {
+            background: rgba(94, 81, 76, 0.96);
+            backdrop-filter: blur(24px);
+            padding: 1rem 4rem;
+            border-bottom: 1px solid rgba(194, 168, 120, 0.2);
+        }
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem; font-weight: 400;
+            letter-spacing: 0.2em; color: var(--secondary); text-decoration: none;
+        }
+        .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a {
+            font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text); text-decoration: none;
+            position: relative; transition: color 0.3s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--gold); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--accent); background: var(--gold);
+            padding: 0.75rem 1.8rem; text-decoration: none; transition: all 0.3s;
+        }
+        .nav-cta:hover { background: var(--secondary); }
+        .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .nav-toggle span { width: 24px; height: 1px; background: var(--text); transition: all 0.3s; }
+
+        /* HERO */
+        #hero {
+            position: relative; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; background: var(--accent);
+        }
+        #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+        /* Logo — fills hero area and uses flex to center the SVG */
+        .hero-logo-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeUp 1.6s ease 0.7s forwards;
+        }
+        .hero-logo-center svg {
+            width: clamp(200px, 30vw, 400px);
+            height: auto;
+            filter: drop-shadow(0 0 40px rgba(40,30,25,0.9));
+            display: block;
+        }
+
+        /* Hero text pinned to bottom */
+        .hero-content {
+            position: absolute;
+            bottom: 5rem; left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.68rem; font-weight: 400; letter-spacing: 0.45em;
+            text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 1s ease 0.5s forwards;
+        }
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 10vw, 9rem); font-weight: 300;
+            line-height: 0.9; color: var(--secondary); letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1.2s ease 0.7s forwards;
+        }
+        .hero-title em { font-style: italic; color: var(--gold); }
+        .hero-subtitle {
+            font-weight: 200; font-size: 1rem; letter-spacing: 0.12em;
+            color: var(--text); max-width: 420px; margin: 0 auto 3rem; line-height: 1.9;
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 1s ease 1s forwards;
+        }
+        .hero-buttons {
+            display: flex; gap: 1.5rem; justify-content: center;
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 1s ease 1.2s forwards;
+        }
+        .btn-primary {
+            font-size: 0.72rem; font-weight: 400; letter-spacing: 0.25em;
+            text-transform: uppercase; color: var(--accent); background: var(--gold);
+            padding: 1rem 2.5rem; text-decoration: none;
+            border: 1px solid var(--gold); transition: all 0.35s;
+        }
+        .btn-primary:hover { background: transparent; color: var(--gold); }
+        .btn-secondary {
+            font-size: 0.72rem; font-weight: 400; letter-spacing: 0.25em;
+            text-transform: uppercase; color: var(--secondary);
+            padding: 1rem 2.5rem; text-decoration: none;
+            border: 1px solid rgba(231, 222, 214, 0.35); transition: all 0.35s;
+        }
+        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+        .scroll-indicator {
+            position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+            opacity: 0; animation: fadeUp 1s ease 1.8s forwards;
+        }
+        .scroll-indicator span { font-size: 0.58rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text); opacity: 0.5; }
+        .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* MARQUEE */
+        .marquee-section { background: var(--gold); padding: 0.9rem 0; overflow: hidden; }
+        .marquee-track { display: flex; gap: 3rem; animation: marqueeAnim 25s linear infinite; white-space: nowrap; }
+        .marquee-item {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem; font-weight: 500; letter-spacing: 0.25em;
+            text-transform: uppercase; color: var(--accent);
+            display: flex; align-items: center; gap: 2rem; flex-shrink: 0;
+        }
+        .marquee-item::after { content: '◆'; font-size: 0.4rem; }
+        @keyframes marqueeAnim { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+        /* SERVICES */
+        #services { padding: 8rem 4rem; background: var(--bg); }
+        .section-header { margin-bottom: 5rem; }
+        .section-eyebrow { font-size: 0.68rem; letter-spacing: 0.42em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: block; }
+        .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--secondary); }
+        .section-title em { font-style: italic; color: var(--gold); }
+
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+        .service-card {
+            background: var(--accent); padding: 3.5rem 3rem;
+            position: relative; overflow: hidden; transition: background 0.5s; cursor: pointer;
+        }
+        .service-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 2px; background: var(--gold);
+            transform: scaleX(0); transform-origin: left; transition: transform 0.5s;
+        }
+        .service-card:hover::after { transform: scaleX(1); }
+        .service-card:hover { background: #4a3f3a; }
+        .service-number { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: rgba(194,168,120,0.12); line-height: 1; margin-bottom: 1.5rem; transition: color 0.5s; }
+        .service-card:hover .service-number { color: rgba(194,168,120,0.28); }
+        .service-line { width: 36px; height: 1px; background: var(--gold); margin-bottom: 2rem; }
+        .service-name { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 400; color: var(--secondary); margin-bottom: 1rem; }
+        .service-desc { font-size: 0.83rem; line-height: 1.95; color: var(--text); opacity: 0.78; }
+        .service-arrow {
+            margin-top: 2rem; font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--gold); display: flex; align-items: center; gap: 0.8rem;
+            opacity: 0; transform: translateX(-12px); transition: all 0.4s;
+        }
+        .service-arrow::after { content: '→'; font-size: 1rem; }
+        .service-card:hover .service-arrow { opacity: 1; transform: translateX(0); }
+
+        /* ABOUT */
+        #about {
+            padding: 8rem 4rem; background: var(--accent);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center;
+        }
+        .about-visual { position: relative; height: 560px; }
+        .about-frame { position: absolute; inset: 0; border: 1px solid rgba(194,168,120,0.25); }
+        .about-inner {
+            position: absolute; top: 2.5rem; left: 2.5rem; right: -2.5rem; bottom: -2.5rem;
+            background: var(--bg); overflow: hidden;
+        }
+        #about-canvas { width: 100%; height: 100%; display: block; }
+        .about-stats {
+            position: absolute; bottom: -3.5rem; right: -1rem;
+            background: var(--gold); padding: 2rem 2.5rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+        }
+        .stat-item { text-align: center; }
+        .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--accent); display: block; line-height: 1; }
+        .stat-label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); opacity: 0.65; }
+
+        .about-content { padding-top: 2rem; }
+        .about-quote { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; font-style: italic; color: var(--secondary); line-height: 1.8; margin-bottom: 1.5rem; }
+        .about-text { font-size: 0.85rem; line-height: 2; color: var(--text); margin-bottom: 1.5rem; }
+        .about-list { list-style: none; margin-top: 2.5rem; }
+        .about-list li {
+            display: flex; align-items: center; gap: 1rem;
+            font-size: 0.83rem; letter-spacing: 0.04em; color: var(--text);
+            padding: 0.9rem 0; border-bottom: 1px solid rgba(194,168,120,0.12);
+        }
+        .about-list li::before { content: ''; width: 20px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+        /* TESTIMONIALS */
+        #testimonials { padding: 8rem 4rem; background: var(--bg); position: relative; overflow: hidden; }
+        #testimonials::before {
+            content: '"'; font-family: 'Cormorant Garamond', serif; font-size: 28rem;
+            color: rgba(94, 81, 76, 0.35); position: absolute; top: -4rem; left: -1rem;
+            line-height: 1; pointer-events: none; user-select: none;
+        }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 5rem; }
+        .testimonial-card {
+            background: var(--accent); padding: 3rem;
+            transition: transform 0.4s ease;
+        }
+        .testimonial-card:hover { transform: translateY(-8px); }
+        .testimonial-stars { display: flex; gap: 0.25rem; margin-bottom: 1.5rem; }
+        .star { color: var(--gold); font-size: 0.85rem; }
+        .testimonial-text {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+            font-weight: 300; font-style: italic; line-height: 1.85; color: var(--secondary); margin-bottom: 2rem;
+        }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar {
+            width: 42px; height: 42px; background: var(--bg); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--gold); flex-shrink: 0;
+        }
+        .author-name { font-size: 0.85rem; font-weight: 400; color: var(--secondary); }
+        .author-location { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text); opacity: 0.55; margin-top: 2px; }
+
+        /* CONTACT */
+        #contact { padding: 8rem 4rem; background: var(--accent); }
+        .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: start; }
+        .contact-info h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; line-height: 1.1; color: var(--secondary); margin-bottom: 1.5rem; }
+        .contact-info h2 em { font-style: italic; color: var(--gold); }
+        .contact-info p { font-size: 0.85rem; line-height: 2; color: var(--text); margin-bottom: 3rem; }
+        .contact-details { list-style: none; }
+        .contact-details li { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text); }
+        .detail-label { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); width: 80px; flex-shrink: 0; padding-top: 2px; }
+
+        .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group label { font-size: 0.62rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); }
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(123, 106, 99, 0.25);
+            border: 1px solid rgba(194, 168, 120, 0.2);
+            color: var(--secondary); padding: 0.9rem 1.2rem;
+            font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 300;
+            outline: none; transition: border-color 0.3s; width: 100%;
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(216, 207, 199, 0.35); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
+        .form-group textarea { min-height: 120px; resize: none; }
+        .form-group select option { background: var(--accent); color: var(--secondary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .submit-btn {
+            font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 400;
+            letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--accent); background: var(--gold);
+            border: none; padding: 1.2rem 3rem; cursor: pointer; transition: all 0.3s; align-self: flex-start;
+        }
+        .submit-btn:hover { background: var(--secondary); }
+
+        /* FOOTER */
+        footer {
+            background: #342b26; padding: 3.5rem 4rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid rgba(194, 168, 120, 0.15);
+        }
+        .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: var(--text); letter-spacing: 0.12em; }
+        .footer-logo span { color: var(--gold); }
+        .footer-copy { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--text); opacity: 0.35; }
+        .footer-links { display: flex; gap: 2rem; }
+        .footer-links a { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); opacity: 0.45; text-decoration: none; transition: all 0.3s; }
+        .footer-links a:hover { opacity: 1; color: var(--gold); }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.85s ease, transform 0.85s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.85s ease, transform 0.85s ease; }
+        .reveal-left.visible { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.85s ease, transform 0.85s ease; }
+        .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+        /* RESPONSIVE — TABLET */
+        @media (max-width: 1100px) {
+            nav, nav.scrolled { padding: 1.2rem 2rem; }
+            #services { padding: 5rem 2rem; }
+            .services-grid { grid-template-columns: 1fr 1fr; }
+            #about { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 6rem; }
+            .about-visual { height: 380px; }
+            #testimonials { padding: 5rem 2rem; }
+            .testimonials-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            #contact { padding: 5rem 2rem; }
+            .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+            footer { padding: 2.5rem 2rem; flex-direction: column; gap: 1.2rem; text-align: center; }
+            .footer-links { justify-content: center; }
+        }
+
+        /* RESPONSIVE — MOBILE */
+        @media (max-width: 720px) {
+            /* Nav */
+            .nav-links, .nav-cta { display: none; }
+            .nav-toggle { display: flex; }
+            nav { padding: 1rem 1.5rem; }
+            nav.scrolled { padding: 0.8rem 1.5rem; }
+
+            /* Hero */
+            #hero { height: 100svh; }
+            .hero-logo-center svg { width: clamp(140px, 72vw, 260px); }
+            .hero-content { bottom: 3.5rem; padding: 0 1rem; }
+            .hero-eyebrow { font-size: 0.6rem; margin-bottom: 0.8rem; }
+            .hero-subtitle { font-size: 0.82rem; margin: 0 auto 1.5rem; max-width: 320px; }
+            .hero-buttons { flex-direction: column; align-items: center; gap: 0.8rem; }
+            .btn-primary, .btn-secondary { padding: 0.85rem 2rem; font-size: 0.68rem; width: 100%; max-width: 240px; text-align: center; }
+            .scroll-indicator { display: none; }
+
+            /* Services */
+            #services { padding: 4rem 1.2rem; }
+            .section-header { margin-bottom: 3rem; }
+            .services-grid { grid-template-columns: 1fr; gap: 2px; }
+            .service-card { padding: 2.5rem 2rem; }
+            .service-number { font-size: 3.5rem; }
+
+            /* About */
+            #about { padding: 4rem 1.2rem; gap: 4rem; }
+            .about-visual { height: 300px; }
+            .about-stats { padding: 1.2rem 1.5rem; gap: 1rem; bottom: -2.5rem; right: 0; }
+            .stat-number { font-size: 1.8rem; }
+
+            /* Testimonials */
+            #testimonials { padding: 4rem 1.2rem; }
+            #testimonials::before { font-size: 10rem; top: -2rem; }
+            .testimonials-grid { grid-template-columns: 1fr; gap: 1.5rem; margin-top: 3rem; }
+            .testimonial-card { padding: 2rem; }
+
+            /* Contact */
+            #contact { padding: 4rem 1.2rem; }
+            .contact-inner { gap: 2.5rem; }
+            .contact-info h2 { font-size: 2.2rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .submit-btn { width: 100%; text-align: center; padding: 1rem; }
+
+            /* Footer */
+            footer { padding: 2rem 1.2rem; gap: 1rem; }
+            .footer-copy { font-size: 0.6rem; }
+
+            /* Hide custom cursor on touch */
+            .cursor, .cursor-ring { display: none; }
+            body { cursor: auto; }
+        }
+
+        /* RESPONSIVE — SMALL MOBILE */
+        @media (max-width: 380px) {
+            .hero-logo-center svg { width: 82vw; }
+            .section-title { font-size: 2rem; }
+            .service-card { padding: 2rem 1.5rem; }
+        }
+
+        /* Mobile nav menu (open state) */
+        nav.nav-open .nav-links {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            inset: 0;
+            background: rgba(94, 81, 76, 0.98);
+            backdrop-filter: blur(24px);
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            z-index: 999;
+        }
+        nav.nav-open .nav-links a { font-size: 1rem; letter-spacing: 0.3em; }
+        nav.nav-open .nav-cta {
+            display: block;
+            position: fixed;
+            bottom: 3rem; left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 1rem 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <a href="#" class="nav-logo">V<span>A</span>LORA</a>
+        <ul class="nav-links">
+            <li><a href="#services">Leistungen</a></li>
+            <li><a href="#about">Über uns</a></li>
+            <li><a href="#testimonials">Referenzen</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Anfragen</a>
+        <div class="nav-toggle" id="navToggle"><span></span><span></span></div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+
+        <!-- VALORA logo centered inside the 3D sphere -->
+        <div class="hero-logo-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="Valora Hauspflege">
+                <!-- Diamond -->
+                <polygon points="200,6 204.5,13 200,20 195.5,13" fill="#E7DED6"/>
+
+                <!-- Left flourish: sweeps left, loops back -->
+                <path d="M197,21 C191,25 174,29 156,36 C138,43 124,52 126,61
+                         C128,68 143,65 160,57 C174,51 188,38 196,30"
+                      stroke="#E7DED6" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <!-- Left outer curl tip -->
+                <path d="M126,61 C122,68 115,70 110,66"
+                      stroke="#E7DED6" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>
+                <!-- Left inner return stroke -->
+                <path d="M196,30 C190,34 182,40 178,46"
+                      stroke="#E7DED6" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+                <!-- Right flourish: mirror -->
+                <path d="M203,21 C209,25 226,29 244,36 C262,43 276,52 274,61
+                         C272,68 257,65 240,57 C226,51 212,38 204,30"
+                      stroke="#E7DED6" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <!-- Right outer curl tip -->
+                <path d="M274,61 C278,68 285,70 290,66"
+                      stroke="#E7DED6" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>
+                <!-- Right inner return stroke -->
+                <path d="M204,30 C210,34 218,40 222,46"
+                      stroke="#E7DED6" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+                <!-- VALORA -->
+                <text x="200" y="113"
+                      text-anchor="middle"
+                      font-family="Cormorant Garamond, Georgia, serif"
+                      font-size="62" font-weight="400" letter-spacing="6"
+                      fill="#E7DED6">VALORA</text>
+
+                <!-- Left rule -->
+                <line x1="22" y1="130" x2="110" y2="130" stroke="#E7DED6" stroke-width="0.8" opacity="0.55"/>
+                <!-- HAUSPFLEGE -->
+                <text x="200" y="135"
+                      text-anchor="middle"
+                      font-family="Jost, sans-serif"
+                      font-size="11.5" font-weight="300" letter-spacing="8"
+                      fill="#E7DED6" opacity="0.78">HAUSPFLEGE</text>
+                <!-- Right rule -->
+                <line x1="290" y1="130" x2="378" y2="130" stroke="#E7DED6" stroke-width="0.8" opacity="0.55"/>
+            </svg>
+        </div>
+
+        <!-- Text pinned to bottom -->
+        <div class="hero-content">
+            <p class="hero-eyebrow">Exzellenz · Schweiz · Seit 2015</p>
+            <p class="hero-subtitle">Luxus-Reinigungsservice für anspruchsvolle Kunden. Wo Schweizer Präzision auf höchste Qualitätsstandards trifft.</p>
+            <div class="hero-buttons">
+                <a href="#services" class="btn-primary">Unsere Leistungen</a>
+                <a href="#contact" class="btn-secondary">Termin vereinbaren</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scrollen</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item">Haushaltsreinigung</span>
+            <span class="marquee-item">Luxusvillen</span>
+            <span class="marquee-item">Ein- &amp; Auszugsreinigung</span>
+            <span class="marquee-item">Büroreinigung</span>
+            <span class="marquee-item">Baureinigung</span>
+            <span class="marquee-item">Veranstaltungsservice</span>
+            <span class="marquee-item">Zürich · Genf · Basel · Lausanne</span>
+            <span class="marquee-item">Haushaltsreinigung</span>
+            <span class="marquee-item">Luxusvillen</span>
+            <span class="marquee-item">Ein- &amp; Auszugsreinigung</span>
+            <span class="marquee-item">Büroreinigung</span>
+            <span class="marquee-item">Baureinigung</span>
+            <span class="marquee-item">Veranstaltungsservice</span>
+            <span class="marquee-item">Zürich · Genf · Basel · Lausanne</span>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section id="services">
+        <div class="section-header reveal">
+            <span class="section-eyebrow">Unser Angebot</span>
+            <h2 class="section-title">Massgeschneiderte <em>Leistungen</em><br>für jeden Raum</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-number">01</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Haushaltsreinigung</h3>
+                <p class="service-desc">Sorgfältige Pflege Ihres Privathauses — von der wöchentlichen Unterhaltsreinigung bis zur saisonalen Tiefenreinigung. Wir behandeln Ihr Zuhause wie unser eigenes.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+            <div class="service-card reveal" style="transition-delay:0.1s">
+                <div class="service-number">02</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Luxusvillen &amp; Residenzen</h3>
+                <p class="service-desc">Spezialisierte Expertise für Herrenhäuser, Châteaux und Seeanwesen in der ganzen Schweiz. Absolute Diskretion garantiert.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+            <div class="service-card reveal" style="transition-delay:0.2s">
+                <div class="service-number">03</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Büro &amp; Gewerbe</h3>
+                <p class="service-desc">Premium-Gebäudereinigung, die Ihren Markenstandards entspricht. Flexible Einsatzplanung für minimale Betriebsunterbrechungen.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+            <div class="service-card reveal" style="transition-delay:0.3s">
+                <div class="service-number">04</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Ein- &amp; Auszugsreinigung</h3>
+                <p class="service-desc">Umfassende Übergabereinigung für einen perfekten Neuanfang. Schweizer Qualitätsstandards — Ergebnisse, die überzeugen.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+            <div class="service-card reveal" style="transition-delay:0.4s">
+                <div class="service-number">05</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Baureinigung</h3>
+                <p class="service-desc">Wir verwandeln Baustellen in makellose Räume. Spezialisiertes Equipment und Fachwissen für jede Oberfläche und jedes Material.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+            <div class="service-card reveal" style="transition-delay:0.5s">
+                <div class="service-number">06</div>
+                <div class="service-line"></div>
+                <h3 class="service-name">Veranstaltungen &amp; Hotellerie</h3>
+                <p class="service-desc">Schnelle Einsatzbereitschaft für private Anlässe, Firmenevents und Gastronomiebetriebe in der ganzen Schweiz.</p>
+                <div class="service-arrow">Mehr erfahren</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="about-visual reveal-left">
+            <div class="about-frame"></div>
+            <div class="about-inner">
+                <canvas id="about-canvas"></canvas>
+            </div>
+            <div class="about-stats">
+                <div class="stat-item"><span class="stat-number">9+</span><span class="stat-label">Jahre</span></div>
+                <div class="stat-item"><span class="stat-number">500+</span><span class="stat-label">Kunden</span></div>
+                <div class="stat-item"><span class="stat-number">4</span><span class="stat-label">Kantone</span></div>
+                <div class="stat-item"><span class="stat-number">98%</span><span class="stat-label">Zufriedenheit</span></div>
+            </div>
+        </div>
+        <div class="about-content reveal-right">
+            <span class="section-eyebrow">Unsere Geschichte</span>
+            <h2 class="section-title" style="margin-bottom:2rem">Die <em>Valora</em><br>Philosophie</h2>
+            <p class="about-quote">Wir glauben, dass wahre Sauberkeit nicht nur die Abwesenheit von Schmutz ist — sondern die Gegenwart von Harmonie, Ordnung und Intention.</p>
+            <p class="about-text">Gegründet in Zürich im Jahr 2015, entstand Valora aus der Überzeugung, dass die Schweiz einen Reinigungsservice verdient, der denselben hohen Ansprüchen genügt wie die feinsten Hotels und Residenzen des Landes. Wir arbeiten mit stiller Professionalität — wir betreten Ihren Raum und hinterlassen nichts als Perfektion.</p>
+            <ul class="about-list">
+                <li>Vollständig versicherte &amp; geprüfte Fachkräfte</li>
+                <li>Ökozertifizierte Reinigungsmittel in Premiumqualität</li>
+                <li>SECO-konforme Arbeitsbedingungen</li>
+                <li>Verfügbar auf Deutsch, Französisch &amp; Englisch</li>
+                <li>24/7 persönlicher Kundendienst</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials">
+        <div class="section-header reveal">
+            <span class="section-eyebrow">Kundenstimmen</span>
+            <h2 class="section-title">Was unsere <em>Kunden</em> sagen</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card reveal">
+                <div class="testimonial-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+                <p class="testimonial-text">«Valora hat unsere Villa am Zürichberg vor einem grossen Anlass verwandelt. Die Liebe zum Detail war aussergewöhnlich — sie bemerkten Dinge, die wir seit Jahren nicht mehr gesehen hatten.»</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">M</div>
+                    <div><div class="author-name">Margrit Hofmann</div><div class="author-location">Zürich, ZH</div></div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal" style="transition-delay:0.15s">
+                <div class="testimonial-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+                <p class="testimonial-text">«Diskret, gründlich und tadellos professionell. Unsere Wohnung in Genf war noch nie so schön. Valora ist für uns unverzichtbar geworden.»</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">P</div>
+                    <div><div class="author-name">Pierre-Alain Favre</div><div class="author-location">Genf, GE</div></div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal" style="transition-delay:0.3s">
+                <div class="testimonial-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+                <p class="testimonial-text">«Nach unserem Umbau war die Baureinigung makellos. Jedes Material wurde mit vollständiger Fachkenntnis und grösster Sorgfalt behandelt.»</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">A</div>
+                    <div><div class="author-name">Andrea Bernasconi</div><div class="author-location">Lugano, TI</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="contact-inner">
+            <div class="contact-info reveal-left">
+                <span class="section-eyebrow">Kontakt aufnehmen</span>
+                <h2>Beginnen Sie Ihre <em>Valora</em><br>Erfahrung</h2>
+                <p>Vereinbaren Sie eine kostenlose Beratung und entdecken Sie, wie Valora Ihren Raum auf ein völlig neues Niveau der Sauberkeit heben kann.</p>
+                <ul class="contact-details">
+                    <li><span class="detail-label">Telefon</span><span>+41 44 123 45 67</span></li>
+                    <li><span class="detail-label">E-Mail</span><span>info@valora-hauspflege.ch</span></li>
+                    <li><span class="detail-label">Adresse</span><span>Bahnhofstrasse 12<br>8001 Zürich, Schweiz</span></li>
+                    <li><span class="detail-label">Öffnungszeiten</span><span>Mo–Sa, 07:00–20:00<br>Sonntag auf Anfrage</span></li>
+                </ul>
+            </div>
+            <form class="contact-form reveal-right" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Vorname</label><input type="text" placeholder="Vorname"></div>
+                    <div class="form-group"><label>Nachname</label><input type="text" placeholder="Nachname"></div>
+                </div>
+                <div class="form-group"><label>E-Mail</label><input type="email" placeholder="ihre@email.ch"></div>
+                <div class="form-group">
+                    <label>Leistung</label>
+                    <select>
+                        <option value="">Leistung auswählen...</option>
+                        <option>Haushaltsreinigung</option>
+                        <option>Luxusvilla / Residenz</option>
+                        <option>Büro &amp; Gewerbe</option>
+                        <option>Ein- &amp; Auszugsreinigung</option>
+                        <option>Baureinigung</option>
+                        <option>Veranstaltungen &amp; Hotellerie</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Nachricht</label><textarea placeholder="Erzählen Sie uns von Ihrem Raum und Ihren Anforderungen..."></textarea></div>
+                <button type="submit" class="submit-btn" id="submitBtn">Anfrage senden</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">V<span>A</span>LORA</div>
+        <p class="footer-copy">© 2026 Valora Hauspflege GmbH · Zürich, Schweiz · Alle Rechte vorbehalten</p>
+        <div class="footer-links">
+            <a href="#">Datenschutz</a>
+            <a href="#">AGB</a>
+            <a href="#">Impressum</a>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    // ── CURSOR ──────────────────────────────────────────────
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursor.style.left = mx + 'px';
+        cursor.style.top = my + 'px';
+    });
+
+    (function tickCursor() {
+        rx += (mx - rx) * 0.13;
+        ry += (my - ry) * 0.13;
+        cursorRing.style.left = rx + 'px';
+        cursorRing.style.top = ry + 'px';
+        requestAnimationFrame(tickCursor);
+    })();
+
+    document.querySelectorAll('a, button, .service-card, input, textarea, select').forEach(el => {
+        el.addEventListener('mouseenter', () => { cursor.classList.add('expand'); cursorRing.classList.add('expand'); });
+        el.addEventListener('mouseleave', () => { cursor.classList.remove('expand'); cursorRing.classList.remove('expand'); });
+    });
+
+    // ── NAVBAR ──────────────────────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    navToggle.addEventListener('click', () => {
+        navbar.classList.toggle('nav-open');
+        // Close on link click
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => navbar.classList.remove('nav-open'));
+    });
+
+    // ── HERO THREE.JS ────────────────────────────────────────
+    (function() {
+        const canvas = document.getElementById('hero-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        camera.position.z = 9;
+
+        // ─ Gold dust particles (original) ─
+        const pCount = 150;
+        const pGeo = new THREE.BufferGeometry();
+        const pPos = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount; i++) {
+            pPos[i*3]   = (Math.random() - 0.5) * 22;
+            pPos[i*3+1] = (Math.random() - 0.5) * 16;
+            pPos[i*3+2] = (Math.random() - 0.5) * 10;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+            color: 0xC2A878, size: 0.055, transparent: true, opacity: 0.55, sizeAttenuation: true
+        }));
+        scene.add(particles);
+
+        // ─ Main icosahedron wireframe (original) ─
+        const ico = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(2.2, 1),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878, wireframe: true, transparent: true, opacity: 0.14 })
+        );
+        scene.add(ico);
+
+        // ─ Inner solid (original) ─
+        const innerIco = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(1.6, 0),
+            new THREE.MeshBasicMaterial({ color: 0x5E514C, transparent: true, opacity: 0.45 })
+        );
+        scene.add(innerIco);
+
+        // ─ Orbital rings (original) ─
+        const mkRing = (r, rx_, ry_, op) => {
+            const m = new THREE.Mesh(
+                new THREE.TorusGeometry(r, 0.012, 2, 120),
+                new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: op })
+            );
+            m.rotation.x = rx_; m.rotation.y = ry_;
+            scene.add(m); return m;
+        };
+        const ring1 = mkRing(3.2, Math.PI/3, 0, 0.2);
+        const ring2 = mkRing(3.8, Math.PI/4, Math.PI/5, 0.1);
+        const ring3 = mkRing(4.4, Math.PI/6, Math.PI/3, 0.07);
+
+        // (bubbles removed)
+
+        // ─ WATER DROPLETS — gold falling drops ─
+        const drops = [];
+        for (let i = 0; i < 14; i++) {
+            const d = new THREE.Mesh(
+                new THREE.SphereGeometry(0.055 + Math.random() * 0.05, 6, 6),
+                new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: 0.4 + Math.random() * 0.25 })
+            );
+            d.position.set((Math.random() - 0.5) * 18, Math.random() * 14 - 4, (Math.random() - 0.5) * 8);
+            d._fall = Math.random() * 0.022 + 0.010;
+            scene.add(d);
+            drops.push(d);
+        }
+
+        // ─ SPARKLE SHIMMER — bright twinkling points ─
+        const spkCount = 55;
+        const spkGeo = new THREE.BufferGeometry();
+        const spkPos = new Float32Array(spkCount * 3);
+        for (let i = 0; i < spkCount; i++) {
+            spkPos[i*3]   = (Math.random() - 0.5) * 20;
+            spkPos[i*3+1] = (Math.random() - 0.5) * 14;
+            spkPos[i*3+2] = (Math.random() - 0.5) * 8;
+        }
+        spkGeo.setAttribute('position', new THREE.BufferAttribute(spkPos, 3));
+        const spkMat = new THREE.PointsMaterial({ color: 0xE7DED6, size: 0.045, transparent: true, opacity: 0.0, sizeAttenuation: true });
+        const sparks = new THREE.Points(spkGeo, spkMat);
+        scene.add(sparks);
+
+        // ─ RIPPLE RINGS — flat water-surface pulse rings ─
+        const rpl1 = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.008, 2, 80),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: 0.13 }));
+        rpl1.rotation.x = Math.PI / 2; rpl1.position.y = -3.2; scene.add(rpl1);
+        const rpl2 = new THREE.Mesh(new THREE.TorusGeometry(2.8, 0.006, 2, 80),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: 0.07 }));
+        rpl2.rotation.x = Math.PI / 2; rpl2.position.y = -3.2; scene.add(rpl2);
+        const rpl3 = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.005, 2, 80),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: 0.04 }));
+        rpl3.rotation.x = Math.PI / 2; rpl3.position.y = -3.2; scene.add(rpl3);
+
+        let mouseXN = 0, mouseYN = 0;
+        document.addEventListener('mousemove', e => {
+            mouseXN = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseYN = -(e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        function resize() {
+            const w = canvas.clientWidth, h = canvas.clientHeight;
+            renderer.setSize(w, h, false);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let t = 0;
+        (function animate() {
+            requestAnimationFrame(animate);
+            t += 0.005;
+
+            // Original elements
+            ico.rotation.x += 0.003; ico.rotation.y += 0.005;
+            innerIco.rotation.x -= 0.004; innerIco.rotation.y -= 0.007;
+            ring1.rotation.z += 0.003; ring2.rotation.z -= 0.002; ring3.rotation.z += 0.0015;
+            particles.rotation.y += 0.0004; particles.rotation.x += 0.0002;
+            ico.position.x += (mouseXN * 0.6 - ico.position.x) * 0.05;
+            ico.position.y += (mouseYN * 0.6 - ico.position.y) * 0.05;
+            innerIco.position.x = ico.position.x;
+            innerIco.position.y = ico.position.y;
+
+            // Drops — fall, reset to top when off screen
+            drops.forEach(d => {
+                d.position.y -= d._fall;
+                if (d.position.y < -9) { d.position.y = 9; d.position.x = (Math.random() - 0.5) * 18; }
+            });
+
+            // Sparkle — twinkle
+            spkMat.opacity = 0.25 + 0.25 * Math.sin(t * 2.8);
+
+            // Ripple rings — pulse outward
+            const rs = 1 + 0.12 * Math.sin(t * 1.2);
+            rpl1.scale.set(rs, rs, 1);
+            rpl2.scale.set(1.05 - 0.08 * Math.sin(t * 1.2 + 1), 1.05 - 0.08 * Math.sin(t * 1.2 + 1), 1);
+            rpl3.scale.set(1 + 0.06 * Math.sin(t * 1.2 + 2), 1 + 0.06 * Math.sin(t * 1.2 + 2), 1);
+
+            renderer.render(scene, camera);
+        })();
+    })();
+
+    // ── ABOUT THREE.JS ───────────────────────────────────────
+    (function() {
+        const canvas = document.getElementById('about-canvas');
+        if (!canvas) return;
+
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        camera.position.z = 6;
+
+        const wire = new THREE.Mesh(
+            new THREE.OctahedronGeometry(1.7, 2),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878, wireframe: true, transparent: true, opacity: 0.28 })
+        );
+        scene.add(wire);
+
+        const solid = new THREE.Mesh(
+            new THREE.OctahedronGeometry(1.3, 0),
+            new THREE.MeshBasicMaterial({ color: 0x7B6A63, transparent: true, opacity: 0.55 })
+        );
+        scene.add(solid);
+
+        const dot = new THREE.Mesh(
+            new THREE.SphereGeometry(0.08, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0xC2A878 })
+        );
+        scene.add(dot);
+
+        function resize() {
+            const w = canvas.clientWidth, h = canvas.clientHeight;
+            renderer.setSize(w, h, false);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        new ResizeObserver(resize).observe(canvas);
+        resize();
+
+        let t = 0;
+        (function animate() {
+            requestAnimationFrame(animate);
+            t += 0.008;
+            wire.rotation.x = Math.sin(t * 0.4) * 0.4 + t * 0.25;
+            wire.rotation.y = t * 0.45;
+            solid.rotation.x = -t * 0.3;
+            solid.rotation.y = t * 0.35;
+            dot.position.x = Math.cos(t * 1.2) * 2.5;
+            dot.position.y = Math.sin(t * 0.8) * 2;
+            dot.position.z = Math.sin(t * 1.2) * 0.8;
+            renderer.render(scene, camera);
+        })();
+    })();
+
+    // ── SCROLL REVEAL ────────────────────────────────────────
+    const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
+
+    // ── FORM ─────────────────────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.textContent = 'Gesendet — Danke!';
+        btn.style.cssText = 'background:#7B6A63;color:#D8CFC7;';
+        setTimeout(() => { btn.textContent = 'Anfrage senden'; btn.style.cssText = ''; }, 3500);
+    });
+    </script>
+</body>
+</html>
