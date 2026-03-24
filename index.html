@@ -362,6 +362,91 @@
         .footer-links a { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); opacity: 0.45; text-decoration: none; transition: all 0.3s; }
         .footer-links a:hover { opacity: 1; color: var(--gold); }
 
+        /* BEFORE & AFTER */
+        #results { padding: 8rem 4rem; background: var(--bg); }
+        .ba-intro { max-width: 520px; margin-bottom: 5rem; }
+        .ba-intro p { font-size: 0.85rem; line-height: 2; color: var(--text); margin-top: 1.5rem; }
+        .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+        .ba-item-label {
+            font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 0.9rem; display: block;
+        }
+        .ba-slider {
+            position: relative; overflow: hidden; cursor: ew-resize;
+            aspect-ratio: 3/2; user-select: none; touch-action: pan-y;
+        }
+        .ba-panel {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ba-panel-after {
+            background: linear-gradient(135deg, #9e8e83 0%, #b8a99e 40%, #cbbcb1 100%);
+        }
+        .ba-panel-before {
+            background: linear-gradient(135deg, #1e1a17 0%, #2c2520 50%, #241f1b 100%);
+            clip-path: inset(0 50% 0 0);
+        }
+        /* decorative "room" lines inside panels */
+        .ba-panel-after::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                linear-gradient(180deg, transparent 55%, rgba(160,140,128,0.35) 55%, rgba(160,140,128,0.35) 56%, transparent 56%),
+                linear-gradient(90deg, transparent 12%, rgba(160,140,128,0.2) 12%, rgba(160,140,128,0.2) 12.5%, transparent 12.5%),
+                linear-gradient(90deg, transparent 87%, rgba(160,140,128,0.2) 87%, rgba(160,140,128,0.2) 87.5%, transparent 87.5%);
+        }
+        .ba-panel-before::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 60%, rgba(80,60,40,0.5) 0%, transparent 60%),
+                radial-gradient(ellipse at 75% 40%, rgba(60,40,20,0.4) 0%, transparent 50%),
+                linear-gradient(180deg, transparent 54%, rgba(30,22,16,0.6) 54%, rgba(30,22,16,0.6) 55.5%, transparent 55.5%);
+        }
+        .ba-watermark {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            pointer-events: none; position: relative; z-index: 1;
+        }
+        .ba-panel-after .ba-watermark { color: rgba(255,255,255,0.18); }
+        .ba-panel-before .ba-watermark { color: rgba(255,255,255,0.1); }
+        .ba-tag {
+            position: absolute; bottom: 1rem; z-index: 5;
+            font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+            padding: 0.35rem 0.85rem;
+            backdrop-filter: blur(6px);
+        }
+        .ba-tag.before {
+            left: 1rem; background: rgba(20,15,12,0.55); color: rgba(216,207,199,0.85);
+        }
+        .ba-tag.after {
+            right: 1rem; background: rgba(194,168,120,0.25); color: #E7DED6;
+            border: 1px solid rgba(194,168,120,0.4);
+        }
+        .ba-handle {
+            position: absolute; top: 0; bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 10; pointer-events: none;
+        }
+        .ba-handle-line { flex: 1; width: 1.5px; background: rgba(194,168,120,0.85); }
+        .ba-handle-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--gold); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+        }
+        .ba-handle-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--accent); stroke-width: 2.2; }
+
+        @media (max-width: 1100px) {
+            #results { padding: 5rem 2rem; }
+            .ba-grid { grid-template-columns: 1fr; gap: 3rem; }
+        }
+        @media (max-width: 720px) {
+            #results { padding: 4rem 1.2rem; }
+        }
+
         /* GRAIN TEXTURE */
         body::after {
             content: '';
@@ -603,6 +688,7 @@
         <a href="#" class="nav-logo">V<span>A</span>LORA</a>
         <ul class="nav-links">
             <li><a href="#services">Leistungen</a></li>
+            <li><a href="#results">Ergebnisse</a></li>
             <li><a href="#about">Über uns</a></li>
             <li><a href="#testimonials">Referenzen</a></li>
             <li><a href="#contact">Kontakt</a></li>
@@ -776,6 +862,62 @@
                 <h3 class="process-title">Makellose Ergebnisse</h3>
                 <p class="process-desc">Sie kehren in einen tadellos sauberen Raum zurück. Bei Ihrer vollsten Zufriedenheit — das ist unser Standard. Nicht unser Ziel.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- BEFORE & AFTER -->
+    <section id="results">
+        <div class="ba-intro reveal">
+            <span class="section-eyebrow">Vorher &amp; Nachher</span>
+            <h2 class="section-title">Die <em>Verwandlung</em><br>spricht für sich</h2>
+            <p>Jeder Einsatz beginnt mit einer gründlichen Bestandsaufnahme und endet mit einem Resultat, das für sich selbst spricht. Ziehen Sie den Regler, um den Unterschied zu erleben.</p>
+        </div>
+        <div class="ba-grid">
+
+            <!-- Slider 1 -->
+            <div class="ba-item">
+                <span class="ba-item-label">Privathaushalt · Zürichberg</span>
+                <div class="ba-slider" data-ba>
+                    <div class="ba-panel ba-panel-after">
+                        <span class="ba-watermark">Nachher</span>
+                    </div>
+                    <div class="ba-panel ba-panel-before">
+                        <span class="ba-watermark">Vorher</span>
+                    </div>
+                    <span class="ba-tag before">Vorher</span>
+                    <span class="ba-tag after">Nachher</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-btn">
+                            <svg viewBox="0 0 24 24"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg>
+                        </div>
+                        <div class="ba-handle-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider 2 -->
+            <div class="ba-item">
+                <span class="ba-item-label">Luxusvilla · Genf</span>
+                <div class="ba-slider" data-ba>
+                    <div class="ba-panel ba-panel-after" style="background: linear-gradient(135deg, #a89890 0%, #bfafa4 40%, #d1c2b8 100%);">
+                        <span class="ba-watermark">Nachher</span>
+                    </div>
+                    <div class="ba-panel ba-panel-before" style="background: linear-gradient(135deg, #1a1612 0%, #28211b 50%, #201b16 100%);">
+                        <span class="ba-watermark">Vorher</span>
+                    </div>
+                    <span class="ba-tag before">Vorher</span>
+                    <span class="ba-tag after">Nachher</span>
+                    <div class="ba-handle">
+                        <div class="ba-handle-line"></div>
+                        <div class="ba-handle-btn">
+                            <svg viewBox="0 0 24 24"><path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/></svg>
+                        </div>
+                        <div class="ba-handle-line"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -1152,6 +1294,47 @@
     }, { threshold: 0.08 });
 
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
+
+    // ── BEFORE / AFTER SLIDERS ──────────────────────────────
+    document.querySelectorAll('[data-ba]').forEach(slider => {
+        const before = slider.querySelector('.ba-panel-before');
+        const handle = slider.querySelector('.ba-handle');
+        let dragging = false;
+
+        function setPos(clientX) {
+            const rect = slider.getBoundingClientRect();
+            const pct = Math.max(2, Math.min(98, ((clientX - rect.left) / rect.width) * 100));
+            before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+            handle.style.left = pct + '%';
+        }
+
+        slider.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
+        window.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
+        window.addEventListener('mouseup', () => dragging = false);
+        slider.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, { passive: true });
+        slider.addEventListener('touchmove', e => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+        slider.addEventListener('touchend', () => dragging = false);
+
+        // Auto-sweep on first scroll-into-view to hint interaction
+        let swept = false;
+        const sweepObs = new IntersectionObserver(entries => {
+            if (!entries[0].isIntersecting || swept) return;
+            swept = true;
+            sweepObs.disconnect();
+            let start = null;
+            function sweep(ts) {
+                if (!start) start = ts;
+                const p = Math.min((ts - start) / 1200, 1);
+                const eased = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p+2,2)/2;
+                const pct = 75 - eased * 50; // sweeps from 75% down to 25%
+                before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+                handle.style.left = pct + '%';
+                if (p < 1) requestAnimationFrame(sweep);
+            }
+            setTimeout(() => requestAnimationFrame(sweep), 400);
+        }, { threshold: 0.5 });
+        sweepObs.observe(slider);
+    });
 
     // ── COUNT-UP STATS ───────────────────────────────────────
     const countObs = new IntersectionObserver(entries => {
