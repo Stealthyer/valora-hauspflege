@@ -325,6 +325,112 @@
         .footer-links a { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); opacity: 0.45; text-decoration: none; transition: all 0.3s; }
         .footer-links a:hover { opacity: 1; color: var(--gold); }
 
+        /* GRAIN TEXTURE */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.032;
+            pointer-events: none;
+            z-index: 9997;
+        }
+
+        /* WAVE SEPARATOR */
+        .wave-sep {
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: var(--accent);
+        }
+        .wave-sep svg { display: block; width: 100%; }
+
+        /* PROCESS SECTION */
+        #process { padding: 8rem 4rem; background: var(--accent); }
+        .process-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0; margin-top: 5rem; position: relative;
+        }
+        .process-grid::before {
+            content: '';
+            position: absolute; top: 2.5rem; left: calc(16.66% + 1rem); right: calc(16.66% + 1rem);
+            height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent);
+            opacity: 0.4;
+        }
+        .process-step { padding: 0 3rem; text-align: center; }
+        .process-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem; font-weight: 300;
+            color: rgba(194,168,120,0.2); line-height: 1;
+            margin-bottom: 1.5rem; display: block;
+            transition: color 0.4s;
+        }
+        .process-step:hover .process-num { color: rgba(194,168,120,0.5); }
+        .process-icon {
+            width: 48px; height: 48px; margin: 0 auto 1.5rem;
+            border: 1px solid rgba(194,168,120,0.35); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .process-icon svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+        .process-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 400; color: var(--secondary);
+            margin-bottom: 0.8rem;
+        }
+        .process-desc { font-size: 0.82rem; line-height: 1.95; color: var(--text); opacity: 0.75; }
+
+        /* WHATSAPP FLOAT */
+        .whatsapp-float {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 9996;
+            width: 52px; height: 52px;
+            background: #25D366; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            text-decoration: none; transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0; animation: fadeUp 1s ease 2.5s forwards;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,0,0,0.35); }
+        .whatsapp-float svg { width: 28px; height: 28px; fill: white; }
+
+        /* LOADING OVERLAY */
+        #loader {
+            position: fixed; inset: 0; z-index: 10000;
+            background: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+        #loader.hidden { opacity: 0; pointer-events: none; }
+        .loader-inner {
+            display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+        }
+        .loader-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem; font-weight: 300; letter-spacing: 0.4em;
+            color: var(--secondary);
+        }
+        .loader-logo span { color: var(--gold); }
+        .loader-bar {
+            width: 120px; height: 1px; background: rgba(194,168,120,0.2);
+            position: relative; overflow: hidden;
+        }
+        .loader-bar::after {
+            content: ''; position: absolute; inset: 0;
+            background: var(--gold);
+            animation: loaderSlide 1s ease forwards;
+        }
+        @keyframes loaderSlide { from { transform: scaleX(0); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
+
+        /* SERVICE ICONS */
+        .service-icon-svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; stroke-width: 1.3; margin-bottom: 1.2rem; opacity: 0.7; transition: opacity 0.4s; }
+        .service-card:hover .service-icon-svg { opacity: 1; }
+
+        /* COUNT-UP */
+        .stat-number { transition: color 0.3s; }
+
+        /* NAV OPEN X */
+        nav.nav-open .nav-toggle span:first-child { transform: translateY(6px) rotate(45deg); }
+        nav.nav-open .nav-toggle span:last-child { transform: translateY(-6px) rotate(-45deg); }
+
         /* ANIMATIONS */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.85s ease, transform 0.85s ease; }
@@ -336,6 +442,10 @@
 
         /* RESPONSIVE — TABLET */
         @media (max-width: 1100px) {
+            #process { padding: 5rem 2rem; }
+            .process-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .process-grid::before { display: none; }
+            .process-step { padding: 0 1rem; }
             nav, nav.scrolled { padding: 1.2rem 2rem; }
             #services { padding: 5rem 2rem; }
             .services-grid { grid-template-columns: 1fr 1fr; }
@@ -435,6 +545,19 @@
 </head>
 <body>
 
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">V<span>A</span>LORA</div>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <a class="whatsapp-float" href="https://wa.me/41441234567" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.851L.057 23.885l6.186-1.443A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.808 9.808 0 01-5.031-1.383l-.36-.214-3.732.872.936-3.625-.235-.373A9.808 9.808 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+    </a>
+
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
@@ -518,6 +641,14 @@
         </div>
     </section>
 
+    <!-- WAVE SEPARATOR -->
+    <div class="wave-sep">
+        <svg viewBox="0 0 1440 48" preserveAspectRatio="none" height="48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,32 C240,48 480,8 720,24 C960,40 1200,16 1440,32 L1440,0 L0,0 Z" fill="#5E514C"/>
+            <path d="M0,40 C360,20 720,52 1080,36 C1260,28 1380,44 1440,40 L1440,48 L0,48 Z" fill="#7B6A63"/>
+        </svg>
+    </div>
+
     <!-- MARQUEE -->
     <div class="marquee-section">
         <div class="marquee-track">
@@ -547,6 +678,7 @@
         <div class="services-grid">
             <div class="service-card reveal">
                 <div class="service-number">01</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Haushaltsreinigung</h3>
                 <p class="service-desc">Sorgfältige Pflege Ihres Privathauses — von der wöchentlichen Unterhaltsreinigung bis zur saisonalen Tiefenreinigung. Wir behandeln Ihr Zuhause wie unser eigenes.</p>
@@ -554,6 +686,7 @@
             </div>
             <div class="service-card reveal" style="transition-delay:0.1s">
                 <div class="service-number">02</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Luxusvillen &amp; Residenzen</h3>
                 <p class="service-desc">Spezialisierte Expertise für Herrenhäuser, Châteaux und Seeanwesen in der ganzen Schweiz. Absolute Diskretion garantiert.</p>
@@ -561,6 +694,7 @@
             </div>
             <div class="service-card reveal" style="transition-delay:0.2s">
                 <div class="service-number">03</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Büro &amp; Gewerbe</h3>
                 <p class="service-desc">Premium-Gebäudereinigung, die Ihren Markenstandards entspricht. Flexible Einsatzplanung für minimale Betriebsunterbrechungen.</p>
@@ -568,6 +702,7 @@
             </div>
             <div class="service-card reveal" style="transition-delay:0.3s">
                 <div class="service-number">04</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Ein- &amp; Auszugsreinigung</h3>
                 <p class="service-desc">Umfassende Übergabereinigung für einen perfekten Neuanfang. Schweizer Qualitätsstandards — Ergebnisse, die überzeugen.</p>
@@ -575,6 +710,7 @@
             </div>
             <div class="service-card reveal" style="transition-delay:0.4s">
                 <div class="service-number">05</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Baureinigung</h3>
                 <p class="service-desc">Wir verwandeln Baustellen in makellose Räume. Spezialisiertes Equipment und Fachwissen für jede Oberfläche und jedes Material.</p>
@@ -582,10 +718,45 @@
             </div>
             <div class="service-card reveal" style="transition-delay:0.5s">
                 <div class="service-number">06</div>
+                <svg class="service-icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
                 <div class="service-line"></div>
                 <h3 class="service-name">Veranstaltungen &amp; Hotellerie</h3>
                 <p class="service-desc">Schnelle Einsatzbereitschaft für private Anlässe, Firmenevents und Gastronomiebetriebe in der ganzen Schweiz.</p>
                 <div class="service-arrow">Mehr erfahren</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process">
+        <div class="section-header reveal">
+            <span class="section-eyebrow">So funktioniert es</span>
+            <h2 class="section-title">In drei Schritten zur<br><em>Perfektion</em></h2>
+        </div>
+        <div class="process-grid">
+            <div class="process-step reveal">
+                <span class="process-num">01</span>
+                <div class="process-icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <h3 class="process-title">Termin vereinbaren</h3>
+                <p class="process-desc">Kontaktieren Sie uns per Telefon, E-Mail oder WhatsApp. Wir besprechen Ihren Bedarf und vereinbaren einen passenden Termin — flexibel und unkompliziert.</p>
+            </div>
+            <div class="process-step reveal" style="transition-delay:0.15s">
+                <span class="process-num">02</span>
+                <div class="process-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                </div>
+                <h3 class="process-title">Wir kommen zu Ihnen</h3>
+                <p class="process-desc">Unser Team erscheint pünktlich, diskret und vollständig ausgerüstet. Sie müssen nicht zu Hause sein — wir arbeiten zuverlässig und respektieren Ihre Privatsphäre.</p>
+            </div>
+            <div class="process-step reveal" style="transition-delay:0.3s">
+                <span class="process-num">03</span>
+                <div class="process-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h3 class="process-title">Makellose Ergebnisse</h3>
+                <p class="process-desc">Sie kehren in einen tadellos sauberen Raum zurück. Bei Ihrer vollsten Zufriedenheit — das ist unser Standard. Nicht unser Ziel.</p>
             </div>
         </div>
     </section>
@@ -755,7 +926,8 @@
         camera.position.z = 9;
 
         // ─ Gold dust particles (original) ─
-        const pCount = 150;
+        const isMobile = window.innerWidth < 720;
+        const pCount = isMobile ? 60 : 150;
         const pGeo = new THREE.BufferGeometry();
         const pPos = new Float32Array(pCount * 3);
         for (let i = 0; i < pCount; i++) {
@@ -800,7 +972,7 @@
 
         // ─ WATER DROPLETS — gold falling drops ─
         const drops = [];
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < (isMobile ? 5 : 14); i++) {
             const d = new THREE.Mesh(
                 new THREE.SphereGeometry(0.055 + Math.random() * 0.05, 6, 6),
                 new THREE.MeshBasicMaterial({ color: 0xC2A878, transparent: true, opacity: 0.4 + Math.random() * 0.25 })
@@ -812,7 +984,7 @@
         }
 
         // ─ SPARKLE SHIMMER — bright twinkling points ─
-        const spkCount = 55;
+        const spkCount = isMobile ? 20 : 55;
         const spkGeo = new THREE.BufferGeometry();
         const spkPos = new Float32Array(spkCount * 3);
         for (let i = 0; i < spkCount; i++) {
@@ -851,10 +1023,18 @@
         window.addEventListener('resize', resize);
         resize();
 
+        // Hide loader after first render
+        renderer.render(scene, camera);
+        setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 900);
+
         let t = 0;
         (function animate() {
             requestAnimationFrame(animate);
             t += 0.005;
+
+            // Camera breathing
+            camera.position.x = Math.sin(t * 0.22) * 0.28;
+            camera.position.y = Math.cos(t * 0.17) * 0.18;
 
             // Original elements
             ico.rotation.x += 0.003; ico.rotation.y += 0.005;
@@ -865,6 +1045,15 @@
             ico.position.y += (mouseYN * 0.6 - ico.position.y) * 0.05;
             innerIco.position.x = ico.position.x;
             innerIco.position.y = ico.position.y;
+
+            // Extended mouse parallax on rings and particles
+            ring1.position.x += (mouseXN * 0.32 - ring1.position.x) * 0.03;
+            ring1.position.y += (mouseYN * 0.22 - ring1.position.y) * 0.03;
+            ring2.position.x += (mouseXN * 0.22 - ring2.position.x) * 0.025;
+            ring2.position.y += (mouseYN * 0.15 - ring2.position.y) * 0.025;
+            ring3.position.x += (mouseXN * 0.14 - ring3.position.x) * 0.02;
+            particles.position.x += (mouseXN * 0.45 - particles.position.x) * 0.035;
+            particles.position.y += (mouseYN * 0.32 - particles.position.y) * 0.035;
 
             // Drops — fall, reset to top when off screen
             drops.forEach(d => {
@@ -945,6 +1134,29 @@
     }, { threshold: 0.08 });
 
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObs.observe(el));
+
+    // ── COUNT-UP STATS ───────────────────────────────────────
+    const countObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const raw = el.textContent.trim();
+            const num = parseInt(raw);
+            if (isNaN(num)) return;
+            const suffix = raw.replace(/[0-9]/g, '');
+            const duration = 1600;
+            const startTime = performance.now();
+            function tick(now) {
+                const p = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(eased * num) + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            countObs.unobserve(el);
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-number').forEach(el => countObs.observe(el));
 
     // ── FORM ─────────────────────────────────────────────────
     document.getElementById('contactForm').addEventListener('submit', e => {
