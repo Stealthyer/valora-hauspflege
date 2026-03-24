@@ -107,11 +107,48 @@
             opacity: 0;
             animation: fadeUp 1.6s ease 0.7s forwards;
         }
-        .hero-logo-center svg {
-            width: clamp(200px, 30vw, 400px);
+        /* Logo HTML layout */
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            filter: drop-shadow(0 0 36px rgba(30,22,18,0.92));
+        }
+        .logo-flourish-svg {
+            width: clamp(160px, 22vw, 300px);
             height: auto;
-            filter: drop-shadow(0 0 40px rgba(40,30,25,0.9));
             display: block;
+        }
+        .logo-valora {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            color: #E7DED6;
+            line-height: 1;
+            margin-top: -0.1em;
+            white-space: nowrap;
+        }
+        .logo-sub-row {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            margin-top: 0.45rem;
+        }
+        .logo-rule-line {
+            width: clamp(36px, 7vw, 88px);
+            height: 1px;
+            background: rgba(231,222,214,0.5);
+            flex-shrink: 0;
+        }
+        .logo-hauspflege {
+            font-family: 'Jost', sans-serif;
+            font-size: clamp(0.48rem, 0.9vw, 0.68rem);
+            font-weight: 300;
+            letter-spacing: 0.55em;
+            color: rgba(231,222,214,0.76);
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
         /* Hero text pinned to bottom */
@@ -580,50 +617,31 @@
 
         <!-- VALORA logo centered inside the 3D sphere -->
         <div class="hero-logo-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="Valora Hauspflege">
-                <!-- Diamond -->
-                <polygon points="200,6 204.5,13 200,20 195.5,13" fill="#E7DED6"/>
-
-                <!-- Left flourish: sweeps left, loops back -->
-                <path d="M197,21 C191,25 174,29 156,36 C138,43 124,52 126,61
-                         C128,68 143,65 160,57 C174,51 188,38 196,30"
-                      stroke="#E7DED6" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-                <!-- Left outer curl tip -->
-                <path d="M126,61 C122,68 115,70 110,66"
-                      stroke="#E7DED6" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>
-                <!-- Left inner return stroke -->
-                <path d="M196,30 C190,34 182,40 178,46"
-                      stroke="#E7DED6" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.6"/>
-
-                <!-- Right flourish: mirror -->
-                <path d="M203,21 C209,25 226,29 244,36 C262,43 276,52 274,61
-                         C272,68 257,65 240,57 C226,51 212,38 204,30"
-                      stroke="#E7DED6" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-                <!-- Right outer curl tip -->
-                <path d="M274,61 C278,68 285,70 290,66"
-                      stroke="#E7DED6" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>
-                <!-- Right inner return stroke -->
-                <path d="M204,30 C210,34 218,40 222,46"
-                      stroke="#E7DED6" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.6"/>
-
-                <!-- VALORA -->
-                <text x="200" y="113"
-                      text-anchor="middle"
-                      font-family="Cormorant Garamond, Georgia, serif"
-                      font-size="62" font-weight="400" letter-spacing="6"
-                      fill="#E7DED6">VALORA</text>
-
-                <!-- Left rule -->
-                <line x1="22" y1="130" x2="110" y2="130" stroke="#E7DED6" stroke-width="0.8" opacity="0.55"/>
-                <!-- HAUSPFLEGE -->
-                <text x="200" y="135"
-                      text-anchor="middle"
-                      font-family="Jost, sans-serif"
-                      font-size="11.5" font-weight="300" letter-spacing="8"
-                      fill="#E7DED6" opacity="0.78">HAUSPFLEGE</text>
-                <!-- Right rule -->
-                <line x1="290" y1="130" x2="378" y2="130" stroke="#E7DED6" stroke-width="0.8" opacity="0.55"/>
-            </svg>
+            <div class="logo-wrap" role="img" aria-label="Valora Hauspflege">
+                <!-- Flourishes only — no SVG text -->
+                <svg class="logo-flourish-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" aria-hidden="true">
+                    <!-- Diamond -->
+                    <polygon points="150,4 154,11 150,18 146,11" fill="#E7DED6"/>
+                    <!-- Left flourish -->
+                    <path d="M148,19 C143,23 130,27 117,33 C104,39 93,47 95,55 C97,61 108,58 120,51 C131,45 141,34 147,26"
+                          stroke="#E7DED6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                    <path d="M95,55 C92,61 86,63 82,60"
+                          stroke="#E7DED6" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+                    <!-- Right flourish -->
+                    <path d="M152,19 C157,23 170,27 183,33 C196,39 207,47 205,55 C203,61 192,58 180,51 C169,45 159,34 153,26"
+                          stroke="#E7DED6" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+                    <path d="M205,55 C208,61 214,63 218,60"
+                          stroke="#E7DED6" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+                </svg>
+                <!-- VALORA as real HTML — fonts always correct -->
+                <div class="logo-valora">VALORA</div>
+                <!-- HAUSPFLEGE with flanking rules -->
+                <div class="logo-sub-row">
+                    <div class="logo-rule-line"></div>
+                    <span class="logo-hauspflege">Hauspflege</span>
+                    <div class="logo-rule-line"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Text pinned to bottom -->
